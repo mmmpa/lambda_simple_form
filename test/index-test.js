@@ -4,8 +4,11 @@ const handler = require('../lib/index').handler;
 describe('handler', () => {
   describe('handler', () => {
     it('1', (done) => {
-      assert.equal(handler({}), {})
+      handler({}, {fail: () => done()});
     });
 
+    it('1', (done) => {
+      handler({}, {fail: () => null, succeed: () => done()});
+    });
   });
 });
