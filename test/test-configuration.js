@@ -14,15 +14,15 @@ conf.merge = (a, b) => {
   return ab;
 };
 
-conf.dbConfiguration = {
+conf.dbConfiguration = ()=> ({
   database: {
     region: "us-west-2",
     endpoint: "http://localhost:8000",
     tableName: 'lambda_simple_form_test'
   }
-};
+});
 
-conf.recordConfiguration = {
+conf.recordConfiguration = ()=> ({
   attributes: ['name', 'email', 'age', 'gender'],
   validation: {
     name: {
@@ -39,6 +39,6 @@ conf.recordConfiguration = {
       isIn: ['female', 'male', 'other']
     }
   }
-};
+});
 
-conf.configuration = conf.merge(conf.dbConfiguration, conf.recordConfiguration);
+conf.configuration = ()=> conf.merge(conf.dbConfiguration(), conf.recordConfiguration());

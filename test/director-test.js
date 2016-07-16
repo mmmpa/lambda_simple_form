@@ -3,7 +3,9 @@ const Director = require('../lib/src/director').Director;
 const conf = require('./test-configuration').configuration;
 
 function setup() {
-  return new Director(conf.configuration);
+  let config = conf.configuration();
+  config.database.tableName += '_test';
+  return new Director(config);
 }
 
 describe('table', ()=> {

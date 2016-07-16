@@ -6,11 +6,11 @@ const merge = conf.merge;
 
 
 function setup() {
-  return new Record(conf.configuration);
+  return new Record(conf.configuration());
 }
 
 function setupDirector() {
-  return new Director(conf.configuration);
+  return new Director(conf.configuration());
 }
 
 function params(a) {
