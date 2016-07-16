@@ -8,16 +8,16 @@ function setup() {
   return new Director(config);
 }
 
-describe('table', ()=> {
-  describe('name', ()=> {
-    it('1', (done)=> {
+describe('table', () => {
+  describe('name', () => {
+    it('1', (done) => {
       let d = setup();
-      d.createTable(()=> done());
+      d.createTable(() => done());
     });
 
-    it('1', (done)=> {
+    it('1', (done) => {
       let d = setup();
-      d.deleteTable(()=> done());
+      d.deleteTable(() => done());
     });
   });
 });

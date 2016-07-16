@@ -1,0 +1,9 @@
+{
+  "name": "lambda_simple_form",
+  "version": "1.0.0",
+  "description": "use aws lambda",
+  "main": "index.js",
+  "dependencies": {
+    "validator": "^5.4.0"
+  }
+}

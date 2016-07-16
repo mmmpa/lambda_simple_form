@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "build": "watchify -t babelify --extension=js ./lib/src/lambda/index.js -o ./lib/lambda_js/index.js -v",
+    "build": "watchify ./lib/src/lambda/index.js -o ./lib/lambda_js/index.js -v",
     "test": "mocha -w --require intelli-espower-loader test/**/*-test.js"
   },
   "repository": {
