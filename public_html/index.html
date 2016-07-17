@@ -11,6 +11,7 @@
 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/superagent/2.1.0/superagent.min.js"></script>
   <script type="text/javascript" src="js/end-point.js"></script>
+  <script type="text/javascript" src="js/validator.js"></script>
 
 </head>
 <body>
@@ -48,7 +49,7 @@
 </div>
 <script>
   (function () {
-    function run(){
+    function run() {
       var $form = $('#form');
       var $thanks = $('#thanks');
 
@@ -58,14 +59,39 @@
       });
     }
 
+    function disablizeButton($form, bol) {
+      var $buttons = $form.find('button');
+      if (bol) {
+        $buttons.each(function () {
+          $(this).prop('disabled', true);
+          $(this).addClass('disabled');
+        });
+      } else {
+        $buttons.each(function () {
+          $(this).prop('disabled', false);
+          $(this).removeClass('disabled');
+        });
+      }
+    }
+
     function send($form, $thanks) {
+      var data = traceValue($form);
+
+      var validated = Validator.validate(data);
+      if(validated.result == 'failure'){
+        deployErrors($form, validated.errors);
+        return;
+      }
+
+      disablizeButton($form, true);
       superagent
               .post(endPoint)
               .set('Accept', 'application/json')
-              .send(traceValue($form))
+              .send(data)
               .end(function (err, res) {
                 if (err) {
-                  deployErrors($form, res.body.errors)
+                  deployErrors($form, res.body.errors);
+                  disablizeButton($form, false);
                 } else {
                   $form.hide();
                   $thanks.show();
@@ -126,6 +152,7 @@
     }
 
     var _inputs = {};
+
     function traceInput($form) {
       if (!!_inputs[$form]) {
         return _inputs[$form];
