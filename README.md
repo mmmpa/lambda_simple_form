@@ -2,6 +2,14 @@
 
 HTML -> AWS Api Gateway -> AWS Lambda -> AWS RDS
 
+# ブラウザ用の`validate`
+
+```
+$ npm run build
+```
+
+で`public_html/validator.js`を更新。`Validator.validate`が定義されるので、`send`するデータと同内容を投げる。
+
 # AWS Api Gateway
 
 `context.fail`からのふりわけにはApi Gateway側で多少の加工が必要になる。
