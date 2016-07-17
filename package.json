@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "watchify ./browser_lib/validator.js -o ./public_html/js/validator.js -v",
+    "zip": "cd ./lib; rm index.zip; zip -r index.zip index.js src/ node_modules/",
     "test": "TEST=true mocha -w --require intelli-espower-loader test/**/*-test.js"
   },
   "repository": {
