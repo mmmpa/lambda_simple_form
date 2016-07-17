@@ -21,3 +21,7 @@ StringifiedされたJSON文字列を、JSONとして返す。
 ```
 $input.path('$.errorMessage')
 ```
+
+## 注意
+
+swaggerから設定を行う場合、Lambdaのアクセス許可を確認すること(不可解なエラーが出る)。

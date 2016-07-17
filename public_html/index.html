@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/superagent/2.1.0/superagent.min.js"></script>
+  <script type="text/javascript" src="js/end-point.js"></script>
+
+</head>
+<body>
+<div class="container">
+  <div class="col-sm-3"></div>
+  <div class="col-sm-6">
+    <h1>Simple Lambda Form</h1>
+    <div id="thanks" style="display:none">
+      <h1>送信完了しました。</h1>
+    </div>
+    <form id="form">
+      <fieldset class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" class="form-control">
+      </fieldset>
+      <fieldset class="form-group">
+        <label>email</label>
+        <input type="text" name="email" class="form-control">
+      </fieldset>
+      <fieldset class="form-group">
+        <label>age</label>
+        <input type="text" name="age" class="form-control">
+      </fieldset>
+      <fieldset class="form-group">
+        <ul class="gender">
+          <li><label><input type="radio" name="gender" value="female"> female</label></li>
+          <li><label><input type="radio" name="gender" value="male"> male</label></li>
+          <li><label><input type="radio" name="gender" value="other"> other</label></li>
+        </ul>
+      </fieldset>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+  <div class="col-sm-3"></div>
+</div>
+<script>
+  (function () {
+    function run(){
+      var $form = $('#form');
+      var $thanks = $('#thanks');
+
+      $form.submit(function (e) {
+        e.preventDefault();
+        send($form, $thanks);
+      });
+    }
+
+    function send($form, $thanks) {
+      superagent
+              .post(endPoint)
+              .set('Accept', 'application/json')
+              .send(traceValue($form))
+              .end(function (err, res) {
+                if (err) {
+                  deployErrors($form, res.body.errors)
+                } else {
+                  $form.hide();
+                  $thanks.show();
+                }
+              });
+    }
+
+    function traceValue($form) {
+      var parameters = {};
+      $form.find('input').each(function () {
+        var $this = $(this);
+        switch ($this.attr('type')) {
+          case 'radio':
+            if ($this.prop('checked')) {
+              parameters[$this.attr('name')] = $this.val();
+            }
+            break;
+          default:
+            parameters[$this.attr('name')] = $this.val();
+            break;
+        }
+      });
+
+      return parameters;
+    }
+
+    function deployErrors($form, errors) {
+      clearErrors($form);
+
+      var inputs = traceInput($form);
+      for (var name in errors) {
+        for (var i = 0, l = errors[name].length; i < l; i++) {
+          var error = $('<p class="text-danger"/>');
+          var errorMessage = '';
+          for (var errorName in errors[name][i]) {
+            errorMessage = [errorName, errors[name][i][errorName]].join(':');
+          }
+          error.html(errorMessage)
+          inputs[name].errors.push(error);
+
+          if (inputs[name].input.join) {
+            inputs[name].input[0].before(error);
+          } else {
+            inputs[name].input.after(error);
+          }
+        }
+      }
+    }
+
+    function clearErrors($form) {
+      var inputs = traceInput($form);
+      for (var name in inputs) {
+        for (var i = inputs[name].errors.length; i--;) {
+          inputs[name].errors[i].remove();
+        }
+        inputs[name].errors = [];
+      }
+    }
+
+    var _inputs = {};
+    function traceInput($form) {
+      if (!!_inputs[$form]) {
+        return _inputs[$form];
+      }
+
+      var inputs = _inputs[$form] = {};
+
+      $form.find('input').each(function (i, el) {
+        var $this = $(this);
+        switch ($this.attr('type')) {
+          case 'radio':
+            if (!inputs[$this.attr('name')]) {
+              inputs[$this.attr('name')] = {input: [], errors: []};
+            }
+            inputs[$this.attr('name')].input.push($this);
+            break;
+          default:
+            inputs[$this.attr('name')] = {input: $this, errors: []};
+            break;
+        }
+      });
+
+      return inputs;
+    }
+
+    run();
+  })();
+</script>
+</body>
+</html>

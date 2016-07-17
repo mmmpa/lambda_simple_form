@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "watchify ./lib/src/lambda/index.js -o ./lib/lambda_js/index.js -v",
-    "test": "mocha -w --require intelli-espower-loader test/**/*-test.js"
+    "test": "TEST=true mocha -w --require intelli-espower-loader test/**/*-test.js"
   },
   "repository": {
     "type": "git",
